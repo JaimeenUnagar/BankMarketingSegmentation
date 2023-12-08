@@ -1,21 +1,21 @@
 import seaborn as sns
-from src.data.data_loader import load_data
-from src.data.preprocessing import preprocess_data
-from src.features.feature_engineering import feature_engineering
-from src.analysis.eda import plot_target_distribution, plot_univariate_analysis, plot_bivariate_analysis, plot_correlation_analysis, display_descriptive_statistics
-from src.models.gaussian_naive_bayes import GaussianNaiveBayes, KFGaussianNaiveBayes
-from src.models.logistic_regression import LogisticRegression
-from src.models.svm import NonLinearSVM
+from src.bank_marketing_segmentation.data.data_loader import load_data
+from src.bank_marketing_segmentation.data.preprocessing import preprocess_data
+from src.bank_marketing_segmentation.data.feature_engineering import feature_engineering
+from src.bank_marketing_segmentation.analysis.eda import plot_target_distribution, plot_univariate_analysis, plot_bivariate_analysis, plot_correlation_analysis, display_descriptive_statistics
+from src.bank_marketing_segmentation.models.gaussian_naive_bayes import GaussianNaiveBayes, KFGaussianNaiveBayes
+from src.bank_marketing_segmentation.models.logistic_regression import LogisticRegression
+from src.bank_marketing_segmentation.models.svm import NonLinearSVM
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import SelectKBest, f_classif
+from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.decomposition import PCA
 
 def main():
     # Load data
-    bank_data = load_data('path/to/your/datafile.xlsx')
+    bank_data = load_data('bank_data.xlsx')
 
     # EDA 
-    sns.set(style="whitegrid")  # Set the aesthetic style of the plots
+    sns.set(style="darkgrid")  # Set the aesthetic style of the plots
 
     # Call the EDA functions
     plot_target_distribution(bank_data)

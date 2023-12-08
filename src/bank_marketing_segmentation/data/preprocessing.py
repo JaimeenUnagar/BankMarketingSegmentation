@@ -90,7 +90,7 @@ def preprocess_data(data):
     count_and_print_unknowns(data, columns_with_unknowns)
 
     # Dropping specified columns
-    columns_to_drop = ['duration', 'emp.var.rate', 'cons.price.idx', 'cons.conf.idx', 'euribor3m', 'nr.employed', 'age_group']
+    columns_to_drop = ['duration', 'emp.var.rate', 'cons.price.idx', 'cons.conf.idx', 'euribor3m', 'nr.employed']
     data = drop_columns(data, columns_to_drop)
 
     # Filtering rows based on conditions
