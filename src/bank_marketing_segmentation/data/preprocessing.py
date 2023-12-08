@@ -39,6 +39,19 @@ def count_and_print_unknowns(data, columns):
         unknown_count = (data[col] == 'unknown').sum()
         print(f"{col}: {data[col].unique()}, Number of 'unknown': {unknown_count}")
 
+def create_composite_economic_indicator(data):
+    """
+    Create a composite economic indicator by averaging specified columns.
+
+    Parameters:
+    data (pd.DataFrame): The DataFrame to process.
+
+    Returns:
+    pd.DataFrame: DataFrame with the new composite economic indicator.
+    """
+    data['composite_economic_indicator'] = data[['euribor3m', 'emp.var.rate', 'nr.employed']].mean(axis=1)
+    return data
+
 def drop_columns(data, columns_to_drop):
     """
     Drop specified columns from the DataFrame.
@@ -89,6 +102,9 @@ def preprocess_data(data):
     columns_with_unknowns = ['job', 'marital', 'education', 'default', 'housing', 'loan', 'pdays']
     count_and_print_unknowns(data, columns_with_unknowns)
 
+    # Create composite economic indicator before dropping columns
+    data = create_composite_economic_indicator(data)
+
     # Dropping specified columns
     columns_to_drop = ['duration', 'emp.var.rate', 'cons.price.idx', 'cons.conf.idx', 'euribor3m', 'nr.employed']
     data = drop_columns(data, columns_to_drop)
@@ -98,7 +114,3 @@ def preprocess_data(data):
     data = filter_rows(data, filter_conditions)
 
     return data
-
-# Example usage
-# bank_data = pd.read_excel('path/to/bank_data.xlsx')
-# preprocessed_data = preprocess_data(bank_data)

@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.model_selection import KFold
 from scipy.stats import norm
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, roc_curve, auc, balanced_accuracy_score, confusion_matrix
@@ -6,13 +7,15 @@ from imblearn.over_sampling import SMOTE, RandomOverSampler
 from imblearn.under_sampling import RandomUnderSampler
 import matplotlib.pyplot as plt
 import pandas as pd
+from sklearn import metrics
+
 
 class GaussianNaiveBayes:
 
-    def __init__(self, X, y) -> None:
-        self.X = X
-        self.y = y
-    
+    def __init__(self, X, y):
+        self.X = X.values if isinstance(X, pd.DataFrame) else X
+        self.y = y.values if isinstance(y, pd.Series) else y
+
     def fitDistribution(self, data):
         mean = np.mean(data)
         std = np.std(data)

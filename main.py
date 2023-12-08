@@ -1,3 +1,4 @@
+import numpy as np
 import seaborn as sns
 from src.bank_marketing_segmentation.data.data_loader import load_data
 from src.bank_marketing_segmentation.data.preprocessing import preprocess_data
@@ -30,10 +31,12 @@ def main():
 
     # Feature Engineering
     encoded_bank_data = feature_engineering(preprocessed_data)
-
+    
     # Model Training and Evaluation
     X = encoded_bank_data.drop('y', axis=1)  # Features
     y = encoded_bank_data['y']               # Target
+    
+    
     lr = LogisticRegression(X, y, learning_rate=0.1e-5, epsilon=0.00005, max_iterations=2500)
 
     # Running model with different resampling strategies
@@ -48,7 +51,7 @@ def main():
     lr.run_kfold(num_splits, ldpara=0, resampling_strategy='over') # Over-sampling
     lr.run_kfold(num_splits, ldpara=0, resampling_strategy='under')# Under-sampling
     lr.run_kfold(num_splits, ldpara=0, resampling_strategy='smote')# SMOTE
-
+    
     #GNB
     # Instantiate and use your Gaussian Naive Bayes model
     gnb = GaussianNaiveBayes(X, y)
@@ -62,7 +65,7 @@ def main():
     gnb.fit(resampling_strategy='under')
     print("\nGaussian Naive Bayes with SMOTE:")
     gnb.fit(resampling_strategy='smote')
-
+    
     # K-Fold Gaussian Naive Bayes model usage
     kfgnb = KFGaussianNaiveBayes(X, y)
 
@@ -75,39 +78,49 @@ def main():
     kfgnb.fit_kfold(resampling_strategy='under')
     print("\nKFold Gaussian Naive Bayes with SMOTE:")
     kfgnb.fit_kfold(resampling_strategy='smote')
-
+    
     #SVM
     # Prepare data for SVM model
-    X_svm = encoded_bank_data.drop('y', axis=1)
-    y_svm = encoded_bank_data['y'].replace(0, -1)  # Convert class labels for SVM
-
+    X_svm = encoded_bank_data.drop('y', axis=1).values
+    y_svm = encoded_bank_data['y'].replace(0, -1).values  # Convert class labels for SVM
+    
     # Split the data into training and test sets for SVM
-    X_train_svm, X_test_svm, y_train_svm, y_test_svm = train_test_split(
-        X_svm, y_svm, test_size=0.25, random_state=11, stratify=y_svm
-    )
+    X_train_svm, X_test_svm, y_train_svm, y_test_svm = train_test_split(X_svm, y_svm, test_size=0.25, random_state=11, stratify=y_svm)
+ 
 
-    # Feature Selection for SVM
-    selector = SelectKBest(f_classif, k=10)
-    X_train_svm_selected = selector.fit_transform(X_train_svm, y_train_svm)
-    X_test_svm_selected = selector.transform(X_test_svm)
-
-    # Dimensionality Reduction with PCA for SVM
-    pca_svm = PCA(n_components=0.95)  # Retain 95% variance
-    X_train_svm_pca = pca_svm.fit_transform(X_train_svm_selected)
-    X_test_svm_pca = pca_svm.transform(X_test_svm_selected)
-
-    # Instantiate and run your SVM model with the PCA-transformed data
-    nl_svm = NonLinearSVM(X_train_svm_pca, y_train_svm, C=0.1, gamma=0.1)
-
+    X_resampled, y_resampled = X_train_svm, y_train_svm
+ 
+    # Specify the desired number of samples for each class
+    desired_samples_per_class = 500
+ 
+    # Select the specified number of samples for each class
+    X_sampled = []
+    y_sampled = []
+ 
+    for class_label in np.unique(y_resampled):
+        class_indices = np.where(y_resampled == class_label)[0]
+   
+        # Randomly select samples if there are more than the desired number
+        selected_indices = np.random.choice(class_indices, size=min(desired_samples_per_class, len(class_indices)), replace=False)
+        
+        X_sampled.append(X_resampled[selected_indices])
+        y_sampled.append(y_resampled[selected_indices])
+ 
+    X_sampled = np.concatenate(X_sampled, axis=0)
+    y_sampled = np.concatenate(y_sampled, axis=0)
+ 
+    #Create and run your SVM model
+    nl_svm = NonLinearSVM(X_sampled, y_sampled, C=1.0, gamma=0.1)
+    
     # Run the SVM model with various resampling strategies
     print("\nNon-Linear SVM Model without resampling:")
-    nl_svm.run_model(X_test_svm_pca, y_test_svm)  # No resampling
+    nl_svm.run_model(X_test_svm, y_test_svm)  # No resampling
     print("\nNon-Linear SVM Model with over-sampling:")
-    nl_svm.run_model(X_test_svm_pca, y_test_svm, resampling_strategy='over')
+    nl_svm.run_model(X_test_svm, y_test_svm, resampling_strategy='over')
     print("\nNon-Linear SVM Model with under-sampling:")
-    nl_svm.run_model(X_test_svm_pca, y_test_svm, resampling_strategy='under')
+    nl_svm.run_model(X_test_svm, y_test_svm, resampling_strategy='under')
     print("\nNon-Linear SVM Model with SMOTE:")
-    nl_svm.run_model(X_test_svm_pca, y_test_svm, resampling_strategy='smote')
+    nl_svm.run_model(X_test_svm, y_test_svm, resampling_strategy='smote')
 
 if __name__ == '__main__':
     main()

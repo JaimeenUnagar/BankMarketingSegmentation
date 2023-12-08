@@ -1,19 +1,6 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 
-def create_composite_economic_indicator(data):
-    """
-    Create a composite economic indicator by averaging specified columns.
-
-    Parameters:
-    data (pd.DataFrame): The DataFrame to process.
-
-    Returns:
-    pd.DataFrame: DataFrame with the new composite economic indicator.
-    """
-    data['composite_economic_indicator'] = data[['euribor3m', 'emp.var.rate', 'nr.employed']].mean(axis=1)
-    return data
-
 def transform_pdays_to_binary(data):
     """
     Transform 'pdays' to a binary feature.
@@ -74,7 +61,6 @@ def feature_engineering(bank_data):
     Returns:
     pd.DataFrame: DataFrame after feature engineering.
     """
-    bank_data = create_composite_economic_indicator(bank_data)
     bank_data = transform_pdays_to_binary(bank_data)
 
     numerical_columns_to_normalize = ['age', 'campaign', 'previous', 'composite_economic_indicator']
@@ -95,6 +81,3 @@ def feature_engineering(bank_data):
 
     return encoded_bank_data
 
-# Example usage
-# bank_data = pd.read_excel('path/to/bank_data.xlsx')
-# processed_data = feature_engineering(bank_data)
