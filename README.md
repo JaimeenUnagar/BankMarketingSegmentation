@@ -46,19 +46,33 @@ The dataset is related to direct marketing campaigns (phone calls) of a Portugue
 ## Project Structure
 
 Project/
+
 │
+
 ├── src/                   # Source code for the project
+
 │   ├── analysis/          # Scripts for data analysis
+
 │   ├── data/              # Data processing and loading scripts
+
 │   ├── models/            # Machine learning models
+
 │   └── utils/             # Utility scripts
+
 │
+
 ├── notebooks/             # Jupyter notebooks for exploration and presentations
+
 ├── config/                # Configuration files
+
 ├── Dockerfile             # Dockerfile for containerizing the application
+
 ├── requirements.txt       # Project dependencies
+
 ├── main.py                # Main script to run the project
+
 └── README.md              # Project README
+
 
 
 ## Installation
@@ -78,7 +92,8 @@ pip install -r requirements.txt
 
 Steps to run the project, scripts, or examples.
 
-```python main.py
+```bash
+python main.py
 ```
 
 ## Contributing
@@ -86,15 +101,23 @@ Steps to run the project, scripts, or examples.
 Contributions to the BankMarketingSegmentation project are welcome!
 
 Fork the repository.
+
 Create a new branch (git checkout -b feature/YourFeature).
+
 Make your changes.
+
 Commit your changes (git commit -am 'Add some feature').
+
 Push to the branch (git push origin feature/YourFeature).
+
 Create a new Pull Request.
+
 
 ## Contact
 For any queries or suggestions, feel free to reach out to Amitesh Tripathi.
+
 E-mail: theamiteshtripathi@gmail.com
+
 LinkedIn: https://www.linkedin.com/in/theamiteshtripathi/
 
 ## License
