@@ -1,6 +1,6 @@
 # BankMarketingSegmentation
 
-![BankMarketingSegmentation Banner](assets/BMS Banner.png)
+![BankMarketingSegmentation Banner](assets/BMS_Banner.png)
 
 ## Project Overview
 
