@@ -189,25 +189,3 @@ class LogisticRegression:
         ax.set_xlabel('FP', fontsize=15)
         ax.legend(loc='lower right', prop={'size': 16})
         plt.show()
-
-
-    
-# Your data preparation and instantiation of LogisticRegression
-X = encoded_bank_data.drop('y', axis=1)  # Features from encoded_bank_data
-y = encoded_bank_data['y']               # Target from encoded_bank_data
-# Instantiate the LogisticRegression class with your encoded data
-lr = LogisticRegression(X, y, learning_rate=0.1e-5, epsilon=0.00005, max_iterations=2500)
-
-# Example usage of the model with different resampling strategies
-lr.run_model(ldpara = 0)  # Run without resampling
-lr.run_model(ldpara = 0, resampling_strategy='over')  # Run with over-sampling
-lr.run_model(ldpara = 0, resampling_strategy='under')  # Run with under-sampling
-lr.run_model(ldpara = 0, resampling_strategy='smote')  # Run with SMOTE
-
-
-# Example usage of the model with different resampling strategies for KFold
-num_splits = 5  # For example, use 5 splits
-lr.run_kfold(num_splits, ldpara=0, resampling_strategy=None)   # Run KFold without resampling
-lr.run_kfold(num_splits, ldpara=0, resampling_strategy='over') # Run KFold with over-sampling
-lr.run_kfold(num_splits, ldpara=0, resampling_strategy='under')# Run KFold with under-sampling
-lr.run_kfold(num_splits, ldpara=0, resampling_strategy='smote')# Run KFold with SMOTE

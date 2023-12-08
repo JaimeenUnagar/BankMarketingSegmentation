@@ -107,59 +107,9 @@ class GaussianNaiveBayes:
       return pred
 
 
-# Prepare your data
-X = encoded_bank_data.drop('y', axis=1)
-y = encoded_bank_data['y']
-
-# Instantiate and use your Gaussian Naive Bayes model
-gnb = GaussianNaiveBayes(X, y)
-
-# Run the model without resampling
-gnb.fit()
-
-# Run the model with over-sampling
-gnb.fit(resampling_strategy='over')
-
-# Run the model with under-sampling
-gnb.fit(resampling_strategy='under')
-
-# Run the model with SMOTE
-gnb.fit(resampling_strategy='smote')  
-
-
-
 # KFold
+class KFGaussianNaiveBayes(GaussianNaiveBayes):
 
-import numpy as np
-import pandas as pd
-from sklearn.datasets import make_blobs
-from scipy.stats import norm
-from sklearn.model_selection import KFold
-from sklearn.metrics import classification_report, roc_curve, auc
-from imblearn.over_sampling import SMOTE
-from sklearn import metrics
-import matplotlib.pyplot as plt
-
-class KFGaussianNaiveBayes:
-
-    def __init__(self, X, y) -> None:
-        self.X = X
-        self.y = y
-
-    def fitDistribution(self, data):
-        mean = np.mean(data)
-        std = np.std(data)
-        dist = norm(mean, std)
-        return dist
-    
-    def probability(self, X, dist, prior):
-        prob = prior
-        count = 0
-        for each in dist:
-          prob = prob * each.pdf(X[count])
-          count += 1
-        return prob
-    
     def fit_kfold(self, n_splits=5, resampling_strategy=None):
         kf = KFold(n_splits=n_splits, shuffle=True, random_state=11)
 
@@ -244,25 +194,4 @@ class KFGaussianNaiveBayes:
             pred.append(y_predict)
         return pred
 
-   
-
-# Usage with encoded_bank_data
-X = encoded_bank_data.drop('y', axis=1).values
-y = encoded_bank_data['y'].values
-
-# Instantiate the Gaussian Naive Bayes model
-kfgnb = KFGaussianNaiveBayes(X, y)
-
-# Run KFold cross-validation with different resampling strategies
-print("KFold without resampling:")
-kfgnb.fit_kfold()
-
-print("\nKFold with over-sampling:")
-kfgnb.fit_kfold(resampling_strategy='over')
-
-print("\nKFold with under-sampling:")
-kfgnb.fit_kfold(resampling_strategy='under')
-
-print("\nKFold with SMOTE:")
-kfgnb.fit_kfold(resampling_strategy='smote')
 

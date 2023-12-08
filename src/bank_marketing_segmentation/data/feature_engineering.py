@@ -1,82 +1,100 @@
-# Creating a composite economic indicator
-bank_data['composite_economic_indicator'] = bank_data[['euribor3m', 'emp.var.rate', 'nr.employed']].mean(axis=1)
+import pandas as pd
+from sklearn.preprocessing import StandardScaler, LabelEncoder
 
-# Implementing Binning for the 'age' feature
-# Defining age bins
-age_bins = [0, 30, 40, 50, 60, 100]
-age_labels = ['<30', '30-40', '40-50', '50-60', '>60']
+def create_composite_economic_indicator(data):
+    """
+    Create a composite economic indicator by averaging specified columns.
 
-# Creating a new column for binned age
-bank_data['age_group'] = pd.cut(bank_data['age'], bins=age_bins, labels=age_labels, right=False)
+    Parameters:
+    data (pd.DataFrame): The DataFrame to process.
 
-# Displaying the first few rows of the modified dataset
-bank_data[['age', 'age_group', 'composite_economic_indicator']].head()
-#ank_data.head()
+    Returns:
+    pd.DataFrame: DataFrame with the new composite economic indicator.
+    """
+    data['composite_economic_indicator'] = data[['euribor3m', 'emp.var.rate', 'nr.employed']].mean(axis=1)
+    return data
 
+def transform_pdays_to_binary(data):
+    """
+    Transform 'pdays' to a binary feature.
 
+    Parameters:
+    data (pd.DataFrame): The DataFrame to process.
 
-# Transform 'pdays' to a binary feature where '1' indicates the client was previously contacted (pdays < 999)
-# and '0' indicates the client was not previously contacted (pdays = 999)
-bank_data['pdays_contacted'] = bank_data['pdays'].apply(lambda x: 0 if x == 999 else 1)
+    Returns:
+    pd.DataFrame: DataFrame with transformed 'pdays'.
+    """
+    data['pdays_contacted'] = data['pdays'].apply(lambda x: 0 if x == 999 else 1)
+    return data.drop('pdays', axis=1)
 
-# Now, we can drop the original 'pdays' column
-bank_data = bank_data.drop('pdays', axis=1)
+def normalize_numerical_features(data, columns_to_normalize):
+    """
+    Normalize specified numerical features.
 
-# Display the first few rows to verify the transformation
-bank_data.head()
+    Parameters:
+    data (pd.DataFrame): The DataFrame to process.
+    columns_to_normalize (list): List of column names to normalize.
 
+    Returns:
+    pd.DataFrame: DataFrame with normalized numerical features.
+    """
+    scaler = StandardScaler()
+    df_numerical = data[columns_to_normalize]
+    df_numerical_normalized = pd.DataFrame(scaler.fit_transform(df_numerical), columns=columns_to_normalize)
+    return df_numerical_normalized
 
+def encode_categorical_features(data, columns_to_encode, binary_mappings):
+    """
+    Encode categorical features.
 
-numerical_columns_to_normalize = ['age', 'campaign', 'previous', 'composite_economic_indicator']
+    Parameters:
+    data (pd.DataFrame): The DataFrame to process.
+    columns_to_encode (list): List of column names to label encode.
+    binary_mappings (dict): Dictionary for binary encoding.
 
+    Returns:
+    pd.DataFrame: DataFrame with encoded features.
+    """
+    label_encoder = LabelEncoder()
+    for column in columns_to_encode:
+        data[column] = label_encoder.fit_transform(data[column])
+    
+    for column, mapping in binary_mappings.items():
+        data[column] = data[column].map(mapping)
+    
+    return data
 
+def feature_engineering(bank_data):
+    """
+    Main function to perform feature engineering.
 
-from sklearn.preprocessing import StandardScaler
-# Initializing the StandardScaler
-scaler = StandardScaler()
+    Parameters:
+    bank_data (pd.DataFrame): The original DataFrame.
 
-# Selecting only the numerical features to normalize
-df_numerical = bank_data_dropped[numerical_columns_to_normalize]
+    Returns:
+    pd.DataFrame: DataFrame after feature engineering.
+    """
+    bank_data = create_composite_economic_indicator(bank_data)
+    bank_data = transform_pdays_to_binary(bank_data)
 
-# Applying StandardScaler to these features
-df_numerical_normalized = pd.DataFrame(scaler.fit_transform(df_numerical), columns=numerical_columns_to_normalize)
+    numerical_columns_to_normalize = ['age', 'campaign', 'previous', 'composite_economic_indicator']
+    df_numerical_normalized = normalize_numerical_features(bank_data, numerical_columns_to_normalize)
 
-# Dropping the old numerical features from the original DataFrame
-df_categorical = bank_data_dropped.drop(numerical_columns_to_normalize, axis=1)
+    df_categorical = bank_data.drop(numerical_columns_to_normalize, axis=1)
+    normalized_bank_data = pd.concat([df_numerical_normalized, df_categorical.reset_index(drop=True)], axis=1)
 
-# Combining the normalized numerical features with the categorical features
-normalized_bank_data = pd.concat([df_numerical_normalized, df_categorical.reset_index(drop=True)], axis=1)
+    columns_to_encode = ['job', 'marital', 'education', 'month', 'day_of_week', 'poutcome']
+    binary_mappings = {
+        'y': {'no': 0, 'yes': 1},
+        'default': {'no': 1, 'unknown': 0, 'yes': 2},
+        'contact': {'cellular': 1, 'telephone': 0},
+        'loan': {'yes': 1, 'no': 0, 'unknown': 2},
+        'housing': {'yes': 1, 'no': 0, 'unknown': 2}
+    }
+    encoded_bank_data = encode_categorical_features(normalized_bank_data, columns_to_encode, binary_mappings)
 
-# Displaying the first few rows of the normalized dataset
-normalized_bank_data.head()
+    return encoded_bank_data
 
-
-from sklearn.preprocessing import LabelEncoder
-
-# Create a copy of the filtered DataFrame
-encoded_bank_data = normalized_bank_data.copy()
-
-# Create a LabelEncoder object
-label_encoder = LabelEncoder()
-
-# List of columns to label encode
-columns_to_encode = ['job', 'marital', 'education', 'month', 'day_of_week', 'poutcome']
-
-# Apply label encoding to each categorical column
-for column in columns_to_encode:
-    encoded_bank_data[column] = label_encoder.fit_transform(encoded_bank_data[column])
-
-# Binary encoding using map
-binary_mappings = {
-    'y': {'no': 0, 'yes': 1},
-    'default': {'no': 1, 'unknown': 0, 'yes': 2},
-    'contact': {'cellular': 1, 'telephone': 0},
-    'loan': {'yes': 1, 'no': 0, 'unknown': 2},
-    'housing': {'yes': 1, 'no': 0, 'unknown': 2}
-}
-
-# Apply binary encoding mappings
-for column, mapping in binary_mappings.items():
-    encoded_bank_data[column] = encoded_bank_data[column].map(mapping)
-
-encoded_bank_data
+# Example usage
+# bank_data = pd.read_excel('path/to/bank_data.xlsx')
+# processed_data = feature_engineering(bank_data)
