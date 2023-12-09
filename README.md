@@ -116,21 +116,39 @@ Create a new Pull Request.
 ## Contact
 For any queries or suggestions, feel free to reach out to Collaborators:
 
+
+# Amitesh Tripathi 
+
 E: theamiteshtripathi@gmail.com
+
 GitHub: https://github.com/theamiteshtripathi
+
 LinkedIn: https://www.linkedin.com/in/theamiteshtripathi/
 
+# Rohit Kumar Gaddam Sreeramulu
+
 E: gaddamrohitkumar@gmail.com
+
 GitHub: https://github.com/Rohitsunnyy
+
 LinkedIn: https://www.linkedin.com/in/grohitkumar/
 
+# Srinivas Murali 
+
 E: srinivasm1997@gmail.com
+
 LinkedIn: https://www.linkedin.com/in/srinivas-m97
 
+# Jaimeen Yogesh Kumar Unagar
+
 E: jaimeenunagar@gmail.com
+
 LinkedIn: https://www.linkedin.com/in/jaimeenunagar/
 
+# Meet Jayeshbhai Vasani 
+
 E: meetvasani89@gmail.com
+
 LinkedIn: https://www.linkedin.com/in/meetvasani/
 
 
