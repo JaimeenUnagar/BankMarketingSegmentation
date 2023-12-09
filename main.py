@@ -19,6 +19,7 @@ def main():
     sns.set(style="darkgrid")  # Set the aesthetic style of the plots
 
     # Call the EDA functions
+    print("\t\t\tExploratory Data Analysis:")
     plot_target_distribution(bank_data)
     plot_univariate_analysis(bank_data)
     plot_bivariate_analysis(bank_data)
@@ -36,24 +37,34 @@ def main():
     X = encoded_bank_data.drop('y', axis=1)  # Features
     y = encoded_bank_data['y']               # Target
     
-    
+    print("\n\t\t\tLogistic Regression Model:")
     lr = LogisticRegression(X, y, learning_rate=0.1e-5, epsilon=0.00005, max_iterations=2500)
 
     # Running model with different resampling strategies
+    print("\nWithout Resampling:")
     lr.run_model(ldpara=0)  # Without resampling
+    print("\nWith Over-sampling:")
     lr.run_model(ldpara = 0, resampling_strategy='over')  # Over-sampling
+    print("\nWith Under-sampling:")
     lr.run_model(ldpara = 0, resampling_strategy='under') # Under-sampling
+    print("\nWith SMOTE:")
     lr.run_model(ldpara = 0, resampling_strategy='smote') # SMOTE
 
     # Running model with KFold and different resampling strategies
     num_splits = 5
+    print("\n\t\t\tKFold Cross-validation:")
+    print("\nWithout Resampling:")
     lr.run_kfold(num_splits, ldpara=0)  # Without resampling
+    print("\nWith Over-sampling:")
     lr.run_kfold(num_splits, ldpara=0, resampling_strategy='over') # Over-sampling
+    print("\nWith Under-sampling:")
     lr.run_kfold(num_splits, ldpara=0, resampling_strategy='under')# Under-sampling
+    print("\nWith SMOTE:")
     lr.run_kfold(num_splits, ldpara=0, resampling_strategy='smote')# SMOTE
     
     #GNB
     # Instantiate and use your Gaussian Naive Bayes model
+    print("\n\t\t\tGaussian Naive Bayes Model:")
     gnb = GaussianNaiveBayes(X, y)
 
     # Run the Gaussian Naive Bayes model with different resampling strategies
@@ -81,6 +92,7 @@ def main():
     
     #SVM
     # Prepare data for SVM model
+    print("\n\t\t\tSupport Vector Machine (SVM) Model:")
     X_svm = encoded_bank_data.drop('y', axis=1).values
     y_svm = encoded_bank_data['y'].replace(0, -1).values  # Convert class labels for SVM
     
