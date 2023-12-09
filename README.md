@@ -81,7 +81,7 @@ Instructions for setting up the project environment.
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/BankMarketingSegmentation.git
+git clone https://github.com/theamiteshtripathi/BankMarketingSegmentation.git
 cd BankMarketingSegmentation
 
 # Install dependencies
@@ -114,11 +114,25 @@ Create a new Pull Request.
 
 
 ## Contact
-For any queries or suggestions, feel free to reach out to Amitesh Tripathi.
+For any queries or suggestions, feel free to reach out to Collaborators:
 
-E-mail: theamiteshtripathi@gmail.com
-
+E: theamiteshtripathi@gmail.com
+GitHub: https://github.com/theamiteshtripathi
 LinkedIn: https://www.linkedin.com/in/theamiteshtripathi/
+
+E: gaddamrohitkumar@gmail.com
+GitHub: https://github.com/Rohitsunnyy
+LinkedIn: https://www.linkedin.com/in/grohitkumar/
+
+E: srinivasm1997@gmail.com
+LinkedIn: https://www.linkedin.com/in/srinivas-m97
+
+E: jaimeenunagar@gmail.com
+LinkedIn: https://www.linkedin.com/in/jaimeenunagar/
+
+E: meetvasani89@gmail.com
+LinkedIn: https://www.linkedin.com/in/meetvasani/
+
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
